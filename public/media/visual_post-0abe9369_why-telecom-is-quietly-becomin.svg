@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg_post-0abe9369" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070B14" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg_post-0abe9369)" />
+
+  <!-- Top Category Pill -->
+  <rect x="80" y="75" width="480" height="42" rx="21" fill="#451A03" stroke="#D97706" stroke-width="1.5" />
+  <text x="320" y="102" fill="#FCD34D" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="1.2" text-anchor="middle">INDUSTRY BENCHMARKS &amp; RESEARCH</text>
+
+  <!-- Main Title -->
+  <text x="80" y="185" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="44" font-weight="800" line-height="1.2">
+    
+      <tspan x="80" dy="0">Why Telecom Is Quietly</tspan>
+    
+      <tspan x="80" dy="54">Becoming the Proving Ground</tspan>
+    
+      <tspan x="80" dy="54">for Practical AI</tspan>
+    
+  </text>
+
+  <!-- Subtitle Meta -->
+  <text x="80" y="380" fill="#94A3B8" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="20" font-weight="500">
+    Format: Industry Commentary · Timezone: West Africa Time (WAT) · Host: LinkedIn
+  </text>
+
+  <!-- Diagram Visual Block -->
+  
+        <rect x="80" y="440" width="920" height="460" rx="24" fill="#1C1304" stroke="#D97706" stroke-width="2" />
+        <text x="120" y="495" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" letter-spacing="1">EDGE TELEMETRY &amp; PREDICTIVE MAINTENANCE PIPELINE</text>
+        <g transform="translate(120, 530)">
+          <rect x="0" y="0" width="260" height="150" rx="16" fill="#2E1C07" stroke="#D97706" stroke-width="1.5" />
+          <text x="25" y="45" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800">1. Edge RMS Data</text>
+          <text x="25" y="80" fill="#FDE68A" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Galooli IoT &lt; 48V DC</text>
+          <text x="25" y="110" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="13">High-Velocity Ingress</text>
+          
+          <path d="M 275 75 L 305 75" stroke="#F59E0B" stroke-width="3" />
+          
+          <rect x="320" y="0" width="260" height="150" rx="16" fill="#2E1C07" stroke="#F59E0B" stroke-width="2" />
+          <text x="345" y="45" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800">2. Anomaly Engine</text>
+          <text x="345" y="80" fill="#FDE68A" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Thermal &amp; voltage delta</text>
+          <text x="345" y="110" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="13">48h Failure Warning</text>
+          
+          <path d="M 595 75 L 625 75" stroke="#F59E0B" stroke-width="3" />
+          
+          <rect x="640" y="0" width="240" height="150" rx="16" fill="#2E1C07" stroke="#10B981" stroke-width="2" />
+          <text x="665" y="45" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800">3. Root Correlation</text>
+          <text x="665" y="80" fill="#FDE68A" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">300 alerts &rarr; 1 cause</text>
+          <text x="665" y="110" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="13">Zero SLA Breach</text>
+        </g>
+        <g transform="translate(120, 730)">
+          <rect x="0" y="0" width="420" height="130" rx="16" fill="#271805" stroke="#451A03" />
+          <text x="30" y="50" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="36" font-weight="800">48h Warning</text>
+          <text x="30" y="85" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">Predictive Rectifier Degradation Alert</text>
+          
+          <rect x="460" y="0" width="420" height="130" rx="16" fill="#271805" stroke="#451A03" />
+          <text x="490" y="50" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="36" font-weight="800">300 : 1</text>
+          <text x="490" y="85" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">Cascade Alarm Correlation &amp; Noise Reduction</text>
+        </g>
+      
+
+  <!-- Footer Branding -->
+  <line x1="80" y1="960" x2="1000" y2="960" stroke="#1E293B" stroke-width="1" />
+  <text x="80" y="1005" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="600">
+    Toluwanimi Akinyemi · Telecommunications Network Operations &amp; AI Automation Engineer
+  </text>
+  <text x="1000" y="1005" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" text-anchor="end">
+    789 NODES · 99.8% SLA
+  </text>
+</svg>

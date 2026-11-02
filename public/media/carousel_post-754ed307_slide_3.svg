@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg_post-754ed307_s3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040914" />
+      <stop offset="50%" stop-color="#081730" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg_post-754ed307_s3)" />
+
+  <!-- Slide Body Content -->
+  
+          <!-- Slide Pill -->
+          <rect x="80" y="75" width="310" height="42" rx="21" fill="#0C4A6E" stroke="#0284C7" stroke-width="1.5" />
+          <text x="235" y="102" fill="#38BDF8" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="1.2" text-anchor="middle">02 · THE ARCHITECTURE</text>
+
+          <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="42" font-weight="800">
+            The 3-Step Deterministic Framework
+          </text>
+          <text x="80" y="235" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="20">
+            How we eliminate failure modes with automated ingestion, guardrails, and telemetry.
+          </text>
+
+          <!-- Architecture Flow Box -->
+          <rect x="80" y="280" width="920" height="520" rx="24" fill="#08152B" stroke="#0284C7" stroke-width="2" />
+          
+          <g transform="translate(130, 330)">
+            <!-- Step 1 -->
+            <rect x="0" y="0" width="240" height="180" rx="16" fill="#0F172A" stroke="#0284C7" stroke-width="2" />
+            <text x="25" y="45" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800">01. INGESTION</text>
+            <text x="25" y="85" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700">IoT &amp; Webhooks</text>
+            <text x="25" y="120" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="14">Galooli RMS telemetry / HTTP raw payloads</text>
+            <text x="25" y="155" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="12">&lt; 48V DC Tracking</text>
+
+            <path d="M 255 90 L 285 90" stroke="#38BDF8" stroke-width="3" />
+
+            <!-- Step 2 -->
+            <rect x="300" y="0" width="240" height="180" rx="16" fill="#0F172A" stroke="#38BDF8" stroke-width="2" />
+            <text x="25" y="45" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800">02. GUARDRAIL</text>
+            <text x="25" y="85" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700">Strict Schema</text>
+            <text x="25" y="120" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="14">JSON validation &amp; circuit breaker fallback</text>
+            <text x="25" y="155" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="12">Zero Silent Errors</text>
+
+            <path d="M 555 90 L 585 90" stroke="#38BDF8" stroke-width="3" />
+
+            <!-- Step 3 -->
+            <rect x="600" y="0" width="240" height="180" rx="16" fill="#0F172A" stroke="#10B981" stroke-width="2" />
+            <text x="25" y="45" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800">03. EXECUTION</text>
+            <text x="25" y="85" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700">Targeted Action</text>
+            <text x="25" y="120" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="14">Automated field dispatch &amp; database commit</text>
+            <text x="25" y="155" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="12">SLA 99.8% Uptime</text>
+          </g>
+
+          <g transform="translate(130, 560)">
+            <rect x="0" y="0" width="840" height="190" rx="16" fill="#0B132B" stroke="#1E293B" />
+            <text x="35" y="45" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800">PIPELINE CHARACTERISTICS</text>
+            <text x="35" y="85" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">✔ Deterministic Execution: Model intelligence bounded by strict typed interfaces.</text>
+            <text x="35" y="120" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">✔ Human-in-the-Loop (HITL): Critical mutations require one-click human authorization.</text>
+            <text x="35" y="155" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">✔ Complete Auditability: Every state transition recorded in Supabase / PostgreSQL.</text>
+          </g>
+
+          <g transform="translate(80, 830)">
+            <rect x="0" y="0" width="920" height="60" rx="16" fill="#0F172A" stroke="#334155" />
+            <text x="40" y="37" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="600">NEXT: PROVEN METRICS &amp; PRODUCTION NUMBERS</text>
+            <text x="880" y="37" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="end">SLIDE 3 OF 5 ➔</text>
+          </g>
+        
+
+  <!-- Footer Branding -->
+  <line x1="80" y1="960" x2="1000" y2="960" stroke="#1E293B" stroke-width="1" />
+  <text x="80" y="1005" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">
+    Toluwanimi Akinyemi · Telecommunications NOC &amp; AI Automation Engineer
+  </text>
+  <text x="1000" y="1005" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700" text-anchor="end">
+    SLIDE 3 / 5 · 789 NODES · 99.8% SLA
+  </text>
+</svg>

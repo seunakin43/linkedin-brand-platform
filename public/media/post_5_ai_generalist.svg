@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060913" />
+      <stop offset="50%" stop-color="#0B132B" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="glowG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#bg5)" />
+
+  <!-- Top Category Pill -->
+  <rect x="80" y="80" width="370" height="42" rx="21" fill="#1E1B4B" stroke="#6366F1" stroke-width="1.5" />
+  <text x="265" y="107" fill="#A5B4FC" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" font-weight="700" letter-spacing="1.5" text-anchor="middle">CAREER STRATEGY &amp; LEADERSHIP</text>
+
+  <!-- Title -->
+  <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="44" font-weight="800">
+    <tspan x="80" dy="0">The Modern AI Generalist:</tspan>
+    <tspan x="80" dy="56">Domain Depth Meets Intelligent Workflows</tspan>
+  </text>
+  <text x="80" y="295" fill="#94A3B8" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="22" font-weight="500">
+    Why technical problem-solving beats superficial tool-chasing every time
+  </text>
+
+  <!-- Diagram Visual: The T-Shape Engine -->
+  <!-- Horizontal Bar (Broad AI Agility) -->
+  <rect x="80" y="370" width="920" height="140" rx="20" fill="#1E293B" stroke="#38BDF8" stroke-width="2" />
+  <text x="120" y="420" fill="#38BDF8" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800">
+    HORIZONTAL: AI &amp; AUTOMATION AGILITY
+  </text>
+  <text x="120" y="460" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">
+    Make.com · n8n · Supabase · Lovable · Google Gemini API · Deterministic Guardrails · REST Integrations
+  </text>
+
+  <!-- Vertical Stem (Deep Telecom Operational Foundation) -->
+  <rect x="290" y="530" width="500" height="380" rx="24" fill="#0F172A" stroke="#6366F1" stroke-width="2.5" />
+  <text x="330" y="585" fill="#A5B4FC" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="800">
+    VERTICAL: OPERATIONAL DEPTH
+  </text>
+
+  <g transform="translate(330, 620)" font-family="'Plus Jakarta Sans', sans-serif" font-size="17">
+    <!-- Point 1 -->
+    <circle cx="10" cy="10" r="6" fill="#10B981" />
+    <text x="30" y="16" fill="#FFFFFF" font-weight="700">789+ Network Node Surveillance</text>
+    <text x="30" y="40" fill="#94A3B8" font-size="14">OWS, Galooli RMS, Pan African Towers</text>
+
+    <!-- Point 2 -->
+    <circle cx="10" cy="80" r="6" fill="#10B981" />
+    <text x="30" y="86" fill="#FFFFFF" font-weight="700">99.8% Nationwide SLA Uptime</text>
+    <text x="30" y="110" fill="#94A3B8" font-size="14">Rigorous MTTR triage &amp; root-cause protocol</text>
+
+    <!-- Point 3 -->
+    <circle cx="10" cy="150" r="6" fill="#10B981" />
+    <text x="30" y="156" fill="#FFFFFF" font-weight="700">Applied Financial Mathematics</text>
+    <text x="30" y="180" fill="#94A3B8" font-size="14">UNIOSUN PGD &amp; FUNAAB B.Sc. Statistics</text>
+
+    <!-- Point 4 -->
+    <circle cx="10" cy="220" r="6" fill="#10B981" />
+    <text x="30" y="226" fill="#FFFFFF" font-weight="700">30% MTTR Reduction</text>
+    <text x="30" y="250" fill="#94A3B8" font-size="14">Standardized operational RCA pipelines</text>
+  </g>
+
+  <!-- Side Callout Box -->
+  <rect x="80" y="550" width="180" height="340" rx="16" fill="#0A0F1D" stroke="#1E293B" stroke-width="1.5" />
+  <text x="170" y="650" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="14" text-anchor="middle">THE EDGE</text>
+  <text x="170" y="700" fill="#38BDF8" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle">Real Problems</text>
+  <text x="170" y="740" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" text-anchor="middle">vs.</text>
+  <text x="170" y="780" fill="#EF4444" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="700" text-anchor="middle">Toy Tutorials</text>
+
+  <!-- Side Callout Box 2 -->
+  <rect x="820" y="550" width="180" height="340" rx="16" fill="#0A0F1D" stroke="#1E293B" stroke-width="1.5" />
+  <text x="910" y="650" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="14" text-anchor="middle">OUTCOME</text>
+  <text x="910" y="700" fill="#10B981" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="800" text-anchor="middle">Reliable</text>
+  <text x="910" y="730" fill="#10B981" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="800" text-anchor="middle">Business</text>
+  <text x="910" y="760" fill="#10B981" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="800" text-anchor="middle">Uptime</text>
+
+  <!-- Footer Branding -->
+  <text x="80" y="995" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">
+    Toluwanimi Akinyemi · Continuous Engineering &amp; Applied AI Systems
+  </text>
+  <text x="1000" y="995" fill="#A5B4FC" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" text-anchor="end">
+    T-SHAPED SPECIALIST
+  </text>
+</svg>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg_post-09ce9182_s1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090514" />
+      <stop offset="50%" stop-color="#1A0C38" />
+      <stop offset="100%" stop-color="#05020D" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg_post-09ce9182_s1)" />
+
+  <!-- Slide Body Content -->
+  
+          <!-- Category Badge -->
+          <rect x="80" y="75" width="460" height="42" rx="21" fill="#3B0764" stroke="#7E22CE" stroke-width="1.5" />
+          <text x="310" y="102" fill="#E9D5FF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="13" font-weight="800" letter-spacing="1.2" text-anchor="middle">DETERMINISTIC AI AGENTS &amp; WORKFLOWS</text>
+
+          <!-- Main Title -->
+          <text x="80" y="200" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="46" font-weight="800">
+            <tspan x="80" dy="0">Why Strict JSON Schemas</tspan><tspan x="80" dy="58">Are the First Line of</tspan><tspan x="80" dy="58">Defense in AI Automation</tspan>
+          </text>
+
+          <!-- Hook Card -->
+          <rect x="80" y="440" width="920" height="320" rx="24" fill="#150A2A" stroke="#7E22CE" stroke-width="2" />
+          <text x="120" y="500" fill="#C084FC" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" letter-spacing="1">THE ENGINEERING REALITY</text>
+          
+          <text x="120" y="555" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="600" width="840">
+            <tspan x="120" dy="0">An AI agent that outputs free-form text into a production da</tspan>
+            <tspan x="120" dy="36">tabase is an outage waiting to happen.
+Here is how strict JSON Sc</tspan>
+            <tspan x="120" dy="36">hema validation acts as our first line of defense:...</tspan>
+          </text>
+
+          <g transform="translate(120, 670)">
+            <rect x="0" y="0" width="260" height="48" rx="24" fill="#3B0764" stroke="#C084FC" />
+            <text x="130" y="30" fill="#C084FC" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">789+ NOC NODES</text>
+
+            <rect x="280" y="0" width="260" height="48" rx="24" fill="#3B0764" stroke="#C084FC" />
+            <text x="410" y="30" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">99.8% SLA DISCIPLINE</text>
+          </g>
+
+          <!-- Swipe Indicator -->
+          <g transform="translate(80, 810)">
+            <rect x="0" y="0" width="920" height="70" rx="18" fill="#0F172A" stroke="#334155" />
+            <text x="40" y="42" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">SWIPE THROUGH THE 5-SLIDE BREAKDOWN</text>
+            <text x="880" y="42" fill="#C084FC" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="end">SLIDE 1 OF 5 ➔</text>
+          </g>
+        
+
+  <!-- Footer Branding -->
+  <line x1="80" y1="960" x2="1000" y2="960" stroke="#1E293B" stroke-width="1" />
+  <text x="80" y="1005" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">
+    Toluwanimi Akinyemi · Telecommunications NOC &amp; AI Automation Engineer
+  </text>
+  <text x="1000" y="1005" fill="#C084FC" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700" text-anchor="end">
+    SLIDE 1 / 5 · 789 NODES · 99.8% SLA
+  </text>
+</svg>
