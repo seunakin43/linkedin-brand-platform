@@ -978,6 +978,20 @@ app.get('/api/analytics', (req, res) => {
   }
 });
 
+// --- 9. CLOUD CRON / WEBHOOK DISPATCHER (For Vercel Crons & External Schedulers) ---
+app.all('/api/cron', async (req, res) => {
+  try {
+    const result = await SchedulerService.runSchedulerTick();
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      dispatched: result || null
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Serve built production frontend static files if dist exists
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath));
@@ -988,15 +1002,20 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
+const isVercel = process.env.VERCEL === '1' || process.env.VERCEL === 'true' || process.env.NOW_REGION != null;
+
 // Start Autonomous Background Scheduler (checks every 60 seconds)
-const WORKER_INTERVAL_MS = 60 * 1000;
-const workerTimer = setInterval(async () => {
-  try {
-    await SchedulerService.runSchedulerTick();
-  } catch (err) {
-    console.error('Background Scheduler tick error:', err);
-  }
-}, WORKER_INTERVAL_MS);
+let workerTimer = null;
+if (!isVercel) {
+  const WORKER_INTERVAL_MS = 60 * 1000;
+  workerTimer = setInterval(async () => {
+    try {
+      await SchedulerService.runSchedulerTick();
+    } catch (err) {
+      console.error('Background Scheduler tick error:', err);
+    }
+  }, WORKER_INTERVAL_MS);
+}
 
 let server = null;
 let listenRetries = 0;
@@ -1031,10 +1050,12 @@ function startServer() {
   });
 }
 
-startServer();
+if (!isVercel) {
+  startServer();
+}
 
 const cleanup = () => {
-  clearInterval(workerTimer);
+  if (workerTimer) clearInterval(workerTimer);
   if (server) {
     server.close(() => {
       process.exit(0);
@@ -1046,3 +1067,6 @@ const cleanup = () => {
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
+
+export default app;
+export { app };
