@@ -473,7 +473,7 @@ What combination of domain expertise and new tech are you actively developing ri
     const post = this.getPostById(id);
     if (!post) throw new Error('Post not found');
 
-    const newStatus = decision === 'approved' ? 'approved' : decision === 'rejected' ? 'rejected' : 'revision_requested';
+    const newStatus = decision === 'approved' ? 'approved' : decision === 'rejected' ? 'rejected' : decision === 'pending_approval' ? 'pending_approval' : 'revision_requested';
 
     db.prepare("UPDATE generated_posts SET status = ?, updated_at = datetime('now') WHERE id = ?").run(newStatus, id);
 

@@ -52,8 +52,19 @@ export class LinkedInPublisherAgent {
 
     if (!forceManualFallback) {
       try {
+        const getConfig = (key) => {
+          try {
+            return db.prepare("SELECT value FROM brand_memory WHERE category = 'config' AND key = ? LIMIT 1").get(key)?.value;
+          } catch (_) {
+            return null;
+          }
+        };
+
+        const webhookUrl = process.env.PUBLISH_WEBHOOK_URL || process.env.MAKE_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL || getConfig('publish_webhook_url');
+        const composioKey = process.env.COMPOSIO_API_KEY || getConfig('composio_api_key');
+        const linkedinToken = process.env.LINKEDIN_ACCESS_TOKEN || getConfig('linkedin_access_token');
+
         // 1. Webhook Connector (Make.com, n8n, Zapier) - Most stable, zero token expiry
-        const webhookUrl = process.env.PUBLISH_WEBHOOK_URL || process.env.MAKE_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL;
         if (webhookUrl) {
           const hookPayload = {
             post_id: post.id,
@@ -88,44 +99,52 @@ export class LinkedInPublisherAgent {
           }
         }
 
-        // 2. Direct Composio REST API Integration
-        if (!publishResult && process.env.COMPOSIO_API_KEY) {
-          const compRes = await fetch('https://backend.composio.dev/api/v1/actions/LINKEDIN_CREATE_LINKED_IN_POST/execute', {
-            method: 'POST',
-            headers: {
-              'x-api-key': process.env.COMPOSIO_API_KEY,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              arguments: {
-                author: profile?.linkedin_urn || 'urn:li:person:-XwFu54idT',
-                commentary: fullText,
-                visibility: 'PUBLIC'
-              }
-            })
-          });
+        // 2. Direct Composio REST API Integration (using connected account takinyemi432@gmail.com)
+        if (!publishResult && composioKey) {
+          try {
+            const compRes = await fetch('https://backend.composio.dev/api/v1/actions/LINKEDIN_CREATE_LINKED_IN_POST/execute', {
+              method: 'POST',
+              headers: {
+                'x-api-key': composioKey,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                connectedAccountId: 'linkedin_semble-tera',
+                arguments: {
+                  author: profile?.linkedin_urn || 'urn:li:person:-XwFu54idT',
+                  commentary: fullText,
+                  visibility: 'PUBLIC'
+                }
+              })
+            });
 
-          if (compRes.ok) {
-            const compData = await compRes.json();
-            const shareUrn = compData.data?.x_restli_id || `urn:li:share:${Date.now()}`;
-            publishResult = {
-              success: true,
-              share_urn: shareUrn,
-              permalink: `https://www.linkedin.com/feed/update/${shareUrn}/`,
-              mode: 'COMPOSIO_REST_API',
-              web_intent_url: 'https://www.linkedin.com/feed/?shareActive=true',
-              full_text: fullText
-            };
+            if (compRes.ok) {
+              const compData = await compRes.json();
+              const shareUrn = compData.data?.x_restli_id || compData.data?.id || `urn:li:share:${Date.now()}`;
+              publishResult = {
+                success: true,
+                share_urn: shareUrn,
+                permalink: `https://www.linkedin.com/feed/update/${shareUrn}/`,
+                mode: 'COMPOSIO_REST_API',
+                web_intent_url: 'https://www.linkedin.com/feed/?shareActive=true',
+                full_text: fullText
+              };
+            } else {
+              const errBody = await compRes.text();
+              console.warn('Composio REST API returned non-200:', compRes.status, errBody);
+            }
+          } catch (compErr) {
+            console.warn('Composio API request failed:', compErr.message);
           }
         }
 
         // 3. Direct LinkedIn Official OAuth Access Token
-        if (!publishResult && process.env.LINKEDIN_ACCESS_TOKEN) {
+        if (!publishResult && linkedinToken) {
           const profileUrn = profile?.linkedin_urn || 'urn:li:person:-XwFu54idT';
           const liRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${process.env.LINKEDIN_ACCESS_TOKEN}`,
+              'Authorization': `Bearer ${linkedinToken}`,
               'Content-Type': 'application/json',
               'X-Restli-Protocol-Version': '2.0.0'
             },

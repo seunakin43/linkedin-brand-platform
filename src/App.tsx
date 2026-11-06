@@ -3,7 +3,8 @@ import {
   Calendar, CheckCircle, Clock, AlertTriangle, Shield, Sparkles, FolderGit2,
   FileSearch, BarChart3, Database, MessageSquare, UserCheck, Play, Pause,
   RefreshCw, Plus, Edit3, Send, Check, X, ChevronRight, ChevronLeft, Download, Share2, ExternalLink,
-  Smartphone, Eye, Layers, Copy, Award, BookOpen, AlertCircle
+  Smartphone, Eye, Layers, Copy, Award, BookOpen, AlertCircle,
+  Settings, RotateCcw, Key, ArrowRight
 } from 'lucide-react';
 
 function PostCarouselViewer({
@@ -184,10 +185,79 @@ export default function App() {
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [publishModalData, setPublishModalData] = useState<any>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<{ type: string; text: string } | null>(null);
+  const [approvalSubView, setApprovalSubView] = useState<'all' | 'pending' | 'approved' | 'published'>('all');
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [channelSettings, setChannelSettings] = useState<any>({
+    publish_webhook_url: '',
+    composio_api_key: '',
+    composio_api_key_set: false,
+    linkedin_token_set: false,
+    composio_account: 'linkedin_semble-tera (takinyemi432@gmail.com)',
+    author_urn: 'urn:li:person:-XwFu54idT'
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   useEffect(() => {
     fetchInitialData();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/settings').then(r => r.json());
+      if (res.success && res.settings) {
+        setChannelSettings((prev: any) => ({
+          ...prev,
+          ...res.settings
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to fetch settings:', err);
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    setSavingSettings(true);
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          publish_webhook_url: channelSettings.publish_webhook_url,
+          composio_api_key: channelSettings.composio_api_key
+        })
+      }).then(r => r.json());
+
+      if (res.success) {
+        showFeedback('success', 'Outbound channel settings saved!');
+        setSettingsModalOpen(false);
+        fetchSettings();
+      } else {
+        showFeedback('error', res.error || 'Failed to save settings');
+      }
+    } catch (err: any) {
+      showFeedback('error', err.message);
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
+  const handleMoveToPending = async (id: string) => {
+    try {
+      const res = await fetch(`/api/posts/${id}/approval`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision: 'pending_approval', feedback: 'Moved back to awaiting approval queue.' })
+      }).then(r => r.json());
+
+      if (res.success) {
+        showFeedback('success', 'Post moved back to Awaiting Approval queue.');
+        fetchInitialData();
+      }
+    } catch (e: any) {
+      showFeedback('error', e.message);
+    }
+  };
 
   const showFeedback = (type: string, text: string) => {
     setFeedbackMsg({ type, text });
@@ -701,193 +771,561 @@ export default function App() {
           </div>
         )}
 
-        {/* 2. APPROVAL CENTER TAB */}
+        {/* 2. APPROVAL & POSTS HUB TAB */}
         {activeTab === 'approval' && (
           <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0F172A] p-5 rounded-2xl border border-slate-800">
-              <div>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-amber-400" />
-                  <span>Human-in-the-Loop Approval Center</span>
-                </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Mandatory authorization checkpoint. No post is ever published to LinkedIn without explicit human approval.
-                </p>
+            {/* Header / Command Center */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#0F172A] p-6 rounded-2xl border border-slate-800 shadow-xl">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                  <Shield className="w-6 h-6 text-amber-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                    <span>Post Review & Publishing Hub</span>
+                    <span className="text-xs font-mono font-medium text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">
+                      Human-in-the-Loop
+                    </span>
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Both <strong>Awaiting Approval</strong> and <strong>Approved Posts</strong> live here on the same page.
+                  </p>
+                </div>
               </div>
-              <div className="text-xs text-slate-400">
-                <span>Filter: </span>
-                <span className="font-bold text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-md border border-amber-800/50">
-                  {posts.filter(p => p.status === 'pending_approval').length} Pending Review
-                </span>
+
+              {/* Status and Settings Actions */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setSettingsModalOpen(true)}
+                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition ${
+                    channelSettings.composio_api_key_set || channelSettings.publish_webhook_url
+                      ? 'bg-emerald-950/60 border-emerald-800 text-emerald-300 hover:bg-emerald-900/60'
+                      : 'bg-amber-950/40 border-amber-800/60 text-amber-300 hover:bg-amber-900/40'
+                  }`}
+                  title="Configure Composio API or Outbound Webhook"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                  <span>
+                    {channelSettings.composio_api_key_set
+                      ? 'Composio Connected'
+                      : channelSettings.publish_webhook_url
+                      ? 'Webhook Configured'
+                      : 'Connect Composio API'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleGenerateWeeklyBatch}
+                  className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Generate New Posts</span>
+                </button>
               </div>
             </div>
 
-            {/* Approval Cards Grid */}
-            <div className="grid grid-cols-1 gap-6">
-              {posts.filter(p => p.status === 'pending_approval' || p.status === 'approved').map(post => (
-                <div key={post.id} className={`bg-[#0F172A] border rounded-2xl p-6 transition-all ${
-                  post.status === 'approved' ? 'border-cyan-500/40' : 'border-amber-500/30'
-                }`}>
-                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-xs font-bold text-cyan-400 bg-blue-950/60 px-3 py-1 rounded-full border border-blue-800">
-                        {post.pillar_name || 'AI Automation'}
-                      </span>
-                      <span className="text-xs text-slate-400 font-mono">
-                        Format: <span className="text-slate-200 font-semibold">{post.content_format}</span>
-                      </span>
+            {/* Quick Filter / Section View Tabs */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0B1120] p-2 rounded-xl border border-slate-800">
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setApprovalSubView('all')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-2 transition ${
+                    approvalSubView === 'all'
+                      ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>All Posts on Page</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    approvalSubView === 'all' ? 'bg-slate-950/30 text-slate-950 font-extrabold' : 'bg-slate-800 text-slate-300'
+                  }`}>
+                    {posts.filter(p => p.status === 'pending_approval' || p.status === 'approved').length}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setApprovalSubView('pending')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-2 transition ${
+                    approvalSubView === 'pending'
+                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Awaiting Approval</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    approvalSubView === 'pending' ? 'bg-slate-950/30 text-slate-950 font-extrabold' : 'bg-amber-950 text-amber-300 border border-amber-800'
+                  }`}>
+                    {posts.filter(p => p.status === 'pending_approval').length}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setApprovalSubView('approved')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-2 transition ${
+                    approvalSubView === 'approved'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Approved & Scheduled</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    approvalSubView === 'approved' ? 'bg-slate-950/30 text-slate-950 font-extrabold' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                  }`}>
+                    {posts.filter(p => p.status === 'approved').length}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setApprovalSubView('published')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-2 transition ${
+                    approvalSubView === 'published'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  }`}
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Live on LinkedIn</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    approvalSubView === 'published' ? 'bg-blue-950 text-white font-extrabold' : 'bg-blue-950/80 text-blue-300 border border-blue-800'
+                  }`}>
+                    {posts.filter(p => p.status === 'published').length}
+                  </span>
+                </button>
+              </div>
+
+              <div className="text-[11px] text-slate-400 font-mono hidden md:flex items-center gap-1.5">
+                <Smartphone className="w-3 h-3 text-cyan-400" />
+                <span>Mobile review links available on all cards</span>
+              </div>
+            </div>
+
+            {/* SECTION 1: ⏳ AWAITING APPROVAL (Visible if subView is 'all' or 'pending') */}
+            {(approvalSubView === 'all' || approvalSubView === 'pending') && (
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 bg-amber-950/20 border border-amber-500/30 rounded-2xl">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400">
+                      <Clock className="w-4 h-4" />
                     </div>
-
-                    <div className="flex items-center gap-3 text-xs">
-                      <span className="text-slate-400 flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                        {post.scheduled_date} at {post.scheduled_time_wat} WAT
-                      </span>
-                      <span className="text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800 text-[11px]">
-                        QC Score: {post.quality_score}/100
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Post Content & Hook */}
-                  <div className="mt-4 space-y-4">
-                    <h3 className="text-base font-bold text-white">{post.title}</h3>
-
-                    {/* Hook Box */}
-                    <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
-                      <p className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Opening Hook:</p>
-                      <p className="text-sm text-slate-200 font-medium whitespace-pre-line">{post.hook}</p>
-                    </div>
-
-                    {/* 5-Slide Picture Carousel */}
-                    <PostCarouselViewer
-                      slides={post.carousel_slides}
-                      title={post.title}
-                      imageUrl={post.image_url}
-                    />
-
-                    {/* Full Body Text */}
-                    <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4">
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Post Body (Formatted for Mobile):</p>
-                      <p className="text-sm text-slate-300 font-sans whitespace-pre-line leading-relaxed">{post.content}</p>
-                      <p className="text-xs text-blue-400 font-mono mt-3">{post.hashtags}</p>
-                    </div>
-
-                    {/* First Comment & CTA */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                      <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
-                        <span className="font-bold text-slate-400 block mb-1">Suggested Discussion Question:</span>
-                        <p className="text-slate-200">{post.audience_question}</p>
-                      </div>
-                      <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
-                        <span className="font-bold text-slate-400 block mb-1">Pinned First Comment:</span>
-                        <p className="text-slate-200">{post.first_comment}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-400">Status: </span>
-                      <span className={`px-2.5 py-0.5 rounded text-xs font-extrabold uppercase ${
-                        post.status === 'approved' ? 'bg-cyan-500 text-slate-950' : post.status === 'published' ? 'bg-emerald-500 text-slate-950' : 'bg-amber-500/20 text-amber-300 border border-amber-600'
-                      }`}>
-                        {post.status.replace('_', ' ')}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        onClick={() => {
-                          const host = window.location.hostname === 'localhost' ? '192.168.1.77' : window.location.hostname;
-                          const reviewUrl = `http://${host}:3001/api/mobile-review?id=${post.id}`;
-                          const approveUrl = `http://${host}:3001/api/quick-approve?id=${post.id}&action=approved`;
-                          navigator.clipboard.writeText(reviewUrl);
-                          alert(`📱 Mobile Links for "${post.title.slice(0, 30)}...":\n\n1. Full Phone Review Page (Copied):\n${reviewUrl}\n\n2. 1-Tap Direct Approve Link:\n${approveUrl}\n\nOpen this link on your phone browser, WhatsApp, or Gmail to review and approve without your laptop!`);
-                        }}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 border border-slate-700"
-                        title="Copy phone approval link"
-                      >
-                        <span>📱 Copy Phone Link</span>
-                      </button>
-
-                      {post.status !== 'published' && (
-                        <button
-                          onClick={() => openRevampModal(post)}
-                          className="px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold rounded-lg border border-amber-600/80 flex items-center gap-1.5 transition"
-                          title="Revamp post copy with specific instructions"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                          <span>Revamp</span>
-                        </button>
-                      )}
-
-                      {post.status === 'pending_approval' && (
-                        <>
-                          <button
-                            onClick={() => handleRejectPost(post.id)}
-                            className="px-3.5 py-1.5 bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-bold rounded-lg border border-rose-800 flex items-center gap-1.5 transition"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                            <span>Reject</span>
-                          </button>
-                          <button
-                            onClick={() => handleApprovePost(post.id)}
-                            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Approve (Auto-Publish at WAT Time)</span>
-                          </button>
-                          <button
-                            onClick={() => handlePublishNow(post)}
-                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
-                            title="Publish immediately without waiting for scheduled time"
-                          >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Publish Now</span>
-                          </button>
-                        </>
-                      )}
-
-                      {post.status === 'approved' && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-cyan-300 font-mono bg-cyan-950/80 border border-cyan-800 px-3 py-1 rounded-md">
-                            ⏰ Auto-Dispatch active for {post.scheduled_date} @ {post.scheduled_time_wat} WAT
-                          </span>
-                          <button
-                            onClick={() => handlePublishNow(post)}
-                            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
-                            title="Publish immediately without waiting for scheduled time"
-                          >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Publish Now</span>
-                          </button>
-                        </div>
-                      )}
-
-                      {post.status === 'published' && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-emerald-300 font-mono bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-md flex items-center gap-1.5">
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                            Live on LinkedIn
-                          </span>
-                          <a
-                            href={post.permalink || 'https://www.linkedin.com/feed/update/urn:li:share:7523140543560982528/'}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            <span>View Live Post ↗</span>
-                          </a>
-                        </div>
-                      )}
+                    <div>
+                      <h3 className="text-sm font-bold text-amber-200 flex items-center gap-2">
+                        <span>Awaiting Human Approval Queue</span>
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-extrabold">
+                          {posts.filter(p => p.status === 'pending_approval').length} Posts
+                        </span>
+                      </h3>
+                      <p className="text-xs text-amber-300/80 mt-0.5">
+                        These posts require your review. Tap <strong>Approve</strong> to move them into the Approved queue below, or <strong>Revamp</strong> to adjust copy.
+                      </p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                {posts.filter(p => p.status === 'pending_approval').length === 0 ? (
+                  <div className="bg-[#0F172A] border border-slate-800 rounded-2xl p-8 text-center space-y-2">
+                    <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto" />
+                    <h4 className="text-sm font-bold text-white">No Posts Awaiting Review</h4>
+                    <p className="text-xs text-slate-400 max-w-md mx-auto">
+                      All candidate posts have either been approved or published! Click "Generate New Posts" to generate the next batch.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-6">
+                    {posts.filter(p => p.status === 'pending_approval').map(post => (
+                      <div key={post.id} className="bg-[#0F172A] border border-amber-500/40 rounded-2xl p-6 shadow-xl transition-all hover:border-amber-500/60">
+                        {/* Header bar */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-xs font-bold text-amber-300 bg-amber-950/60 px-3 py-1 rounded-full border border-amber-800">
+                              {post.pillar_name || 'AI Automation'}
+                            </span>
+                            <span className="text-xs text-slate-400 font-mono">
+                              Format: <span className="text-slate-200 font-semibold">{post.content_format}</span>
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="text-slate-400 flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                              {post.scheduled_date} at {post.scheduled_time_wat} WAT
+                            </span>
+                            <span className="text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800 text-[11px]">
+                              QC Score: {post.quality_score}/100
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="mt-4 space-y-4">
+                          <h3 className="text-base font-bold text-white">{post.title}</h3>
+
+                          {/* Hook Box */}
+                          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
+                            <p className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1">Opening Hook:</p>
+                            <p className="text-sm text-slate-200 font-medium whitespace-pre-line">{post.hook}</p>
+                          </div>
+
+                          {/* 5-Slide Picture Carousel */}
+                          <PostCarouselViewer
+                            slides={post.carousel_slides}
+                            title={post.title}
+                            imageUrl={post.image_url}
+                          />
+
+                          {/* Post Body */}
+                          <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4">
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Post Body (Formatted for Mobile):</p>
+                            <p className="text-sm text-slate-300 font-sans whitespace-pre-line leading-relaxed">{post.content}</p>
+                            <p className="text-xs text-blue-400 font-mono mt-3">{post.hashtags}</p>
+                          </div>
+
+                          {/* First Comment & CTA */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                              <span className="font-bold text-slate-400 block mb-1">Suggested Discussion Question:</span>
+                              <p className="text-slate-200">{post.audience_question}</p>
+                            </div>
+                            <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                              <span className="font-bold text-slate-400 block mb-1">Pinned First Comment:</span>
+                              <p className="text-slate-200">{post.first_comment}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Footer */}
+                        <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-slate-400">Status: </span>
+                            <span className="px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-600">
+                              Awaiting Approval
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const host = window.location.hostname === 'localhost' ? '192.168.1.77' : window.location.hostname;
+                                const reviewUrl = `http://${host}:3001/api/mobile-review?id=${post.id}`;
+                                const approveUrl = `http://${host}:3001/api/quick-approve?id=${post.id}&action=approved`;
+                                navigator.clipboard.writeText(reviewUrl);
+                                alert(`📱 Mobile Links for "${post.title.slice(0, 30)}...":\n\n1. Full Phone Review Page (Copied):\n${reviewUrl}\n\n2. 1-Tap Direct Approve Link:\n${approveUrl}\n\nOpen this link on your phone browser, WhatsApp, or Gmail to review and approve without your laptop!`);
+                              }}
+                              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 border border-slate-700"
+                              title="Copy phone approval link"
+                            >
+                              <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
+                              <span>Copy Phone Link</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => openRevampModal(post)}
+                              className="px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold rounded-lg border border-amber-600/80 flex items-center gap-1.5 transition"
+                              title="Revamp post copy with specific instructions"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                              <span>Revamp</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleRejectPost(post.id)}
+                              className="px-3.5 py-1.5 bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-bold rounded-lg border border-rose-800 flex items-center gap-1.5 transition"
+                              title="Reject and auto-create a replacement post"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                              <span>Reject</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleApprovePost(post.id)}
+                              className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
+                              title="Approve and move into the Approved queue below"
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                              <span>Approve (Move to Scheduled)</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handlePublishNow(post)}
+                              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
+                              title="Publish immediately without waiting for scheduled time"
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Publish Now</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SECTION 2: ✅ APPROVED & SCHEDULED (Visible if subView is 'all' or 'approved') */}
+            {(approvalSubView === 'all' || approvalSubView === 'approved') && (
+              <div className="space-y-4 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 bg-emerald-950/20 border border-emerald-500/30 rounded-2xl">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-emerald-200 flex items-center gap-2">
+                        <span>Approved & Scheduled Posts Queue</span>
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-extrabold">
+                          {posts.filter(p => p.status === 'approved').length} Posts
+                        </span>
+                      </h3>
+                      <p className="text-xs text-emerald-300/80 mt-0.5">
+                        These posts have passed human authorization and are locked in the autonomous schedule to post at their assigned WAT times.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {posts.filter(p => p.status === 'approved').length === 0 ? (
+                  <div className="bg-[#0F172A] border border-slate-800 rounded-2xl p-8 text-center space-y-2">
+                    <Clock className="w-8 h-8 text-slate-500 mx-auto" />
+                    <h4 className="text-sm font-bold text-white">No Posts Currently Approved</h4>
+                    <p className="text-xs text-slate-400 max-w-md mx-auto">
+                      Approve any post from the "Awaiting Human Approval" section above to lock it into the publishing schedule.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-6">
+                    {posts.filter(p => p.status === 'approved').map(post => (
+                      <div key={post.id} className="bg-[#0F172A] border border-cyan-500/40 rounded-2xl p-6 shadow-xl transition-all hover:border-cyan-500/70">
+                        {/* Auto-Dispatch Schedule Banner */}
+                        <div className="mb-4 bg-cyan-950/70 border border-cyan-800/80 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-cyan-300 text-xs font-bold">
+                            <Clock className="w-4 h-4 text-cyan-400 animate-pulse" />
+                            <span>⏰ Scheduled Auto-Dispatch: {post.scheduled_date} at {post.scheduled_time_wat} WAT</span>
+                          </div>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-900/60 text-cyan-200 border border-cyan-700">
+                            Slot Locked
+                          </span>
+                        </div>
+
+                        {/* Header bar */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-xs font-bold text-cyan-400 bg-blue-950/60 px-3 py-1 rounded-full border border-blue-800">
+                              {post.pillar_name || 'AI Automation'}
+                            </span>
+                            <span className="text-xs text-slate-400 font-mono">
+                              Format: <span className="text-slate-200 font-semibold">{post.content_format}</span>
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="text-slate-400 flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                              {post.scheduled_date} at {post.scheduled_time_wat} WAT
+                            </span>
+                            <span className="text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800 text-[11px]">
+                              QC Score: {post.quality_score}/100
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="mt-4 space-y-4">
+                          <h3 className="text-base font-bold text-white">{post.title}</h3>
+
+                          {/* Hook Box */}
+                          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
+                            <p className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Opening Hook:</p>
+                            <p className="text-sm text-slate-200 font-medium whitespace-pre-line">{post.hook}</p>
+                          </div>
+
+                          {/* 5-Slide Picture Carousel */}
+                          <PostCarouselViewer
+                            slides={post.carousel_slides}
+                            title={post.title}
+                            imageUrl={post.image_url}
+                          />
+
+                          {/* Post Body */}
+                          <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4">
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Post Body (Formatted for Mobile):</p>
+                            <p className="text-sm text-slate-300 font-sans whitespace-pre-line leading-relaxed">{post.content}</p>
+                            <p className="text-xs text-blue-400 font-mono mt-3">{post.hashtags}</p>
+                          </div>
+
+                          {/* First Comment & CTA */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                              <span className="font-bold text-slate-400 block mb-1">Suggested Discussion Question:</span>
+                              <p className="text-slate-200">{post.audience_question}</p>
+                            </div>
+                            <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl">
+                              <span className="font-bold text-slate-400 block mb-1">Pinned First Comment:</span>
+                              <p className="text-slate-200">{post.first_comment}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Footer */}
+                        <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-slate-400">Status: </span>
+                            <span className="px-2.5 py-0.5 rounded text-xs font-extrabold uppercase bg-cyan-500 text-slate-950">
+                              Approved & Scheduled
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const host = window.location.hostname === 'localhost' ? '192.168.1.77' : window.location.hostname;
+                                const reviewUrl = `http://${host}:3001/api/mobile-review?id=${post.id}`;
+                                navigator.clipboard.writeText(reviewUrl);
+                                alert(`📱 Mobile Review Link for "${post.title.slice(0, 30)}..." copied!\n\n${reviewUrl}`);
+                              }}
+                              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 border border-slate-700"
+                              title="Copy phone review link"
+                            >
+                              <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
+                              <span>Copy Phone Link</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => openRevampModal(post)}
+                              className="px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold rounded-lg border border-amber-600/80 flex items-center gap-1.5 transition"
+                              title="Revamp post copy before scheduled dispatch"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                              <span>Revamp</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleMoveToPending(post.id)}
+                              className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg border border-slate-700 flex items-center gap-1.5 transition"
+                              title="Move back to Awaiting Approval queue"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                              <span>Move Back to Review</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handlePublishNow(post)}
+                              className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
+                              title="Publish immediately without waiting for scheduled WAT time"
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Publish Now</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SECTION 3: 🚀 LIVE ON LINKEDIN (Visible if subView is 'all' or 'published') */}
+            {(approvalSubView === 'all' || approvalSubView === 'published') && (
+              <div className="space-y-4 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 bg-blue-950/20 border border-blue-500/30 rounded-2xl">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
+                      <Send className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-blue-200 flex items-center gap-2">
+                        <span>Live on LinkedIn</span>
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-blue-600 text-white font-extrabold">
+                          {posts.filter(p => p.status === 'published').length} Live
+                        </span>
+                      </h3>
+                      <p className="text-xs text-blue-300/80 mt-0.5">
+                        These posts have been published live to Toluwanimi's LinkedIn profile.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {posts.filter(p => p.status === 'published').length === 0 ? (
+                  <div className="bg-[#0F172A] border border-slate-800 rounded-2xl p-8 text-center space-y-2">
+                    <Send className="w-8 h-8 text-slate-500 mx-auto" />
+                    <h4 className="text-sm font-bold text-white">No Published Posts Yet</h4>
+                    <p className="text-xs text-slate-400 max-w-md mx-auto">
+                      Use "Publish Now" on any approved post or allow the scheduled WAT dispatcher to publish automatically.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-6">
+                    {posts.filter(p => p.status === 'published').map(post => (
+                      <div key={post.id} className="bg-[#0F172A] border border-blue-500/40 rounded-2xl p-6 shadow-xl transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-800 flex items-center gap-1.5">
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              Live on LinkedIn
+                            </span>
+                            <span className="text-xs text-cyan-400 font-mono bg-blue-950/60 px-2.5 py-0.5 rounded border border-blue-800">
+                              {post.pillar_name || 'AI Automation'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={post.permalink || 'https://www.linkedin.com/feed/update/urn:li:share:7523140543560982528/'}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-md flex items-center gap-1.5 transition"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              <span>View Live Post on LinkedIn ↗</span>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 space-y-4">
+                          <h3 className="text-base font-bold text-white">{post.title}</h3>
+
+                          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5">
+                            <p className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Hook:</p>
+                            <p className="text-sm text-slate-200 font-medium whitespace-pre-line">{post.hook}</p>
+                          </div>
+
+                          <PostCarouselViewer
+                            slides={post.carousel_slides}
+                            title={post.title}
+                            imageUrl={post.image_url}
+                          />
+
+                          <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4">
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Published Text:</p>
+                            <p className="text-sm text-slate-300 font-sans whitespace-pre-line leading-relaxed">{post.content}</p>
+                            <p className="text-xs text-blue-400 font-mono mt-3">{post.hashtags}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -1585,6 +2023,106 @@ export default function App() {
                   <span>Open LinkedIn Composer ↗</span>
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Outbound Channel / Composio Settings Modal */}
+      {settingsModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0F172A] border border-cyan-500/50 max-w-xl w-full rounded-2xl p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <Settings className="w-5 h-5 text-cyan-400" />
+                <h3 className="font-bold text-base text-white">Outbound Publishing Settings</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSettingsModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* Composio Card */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Key className="w-4 h-4 text-cyan-400" />
+                    <span className="font-bold text-white text-sm">Composio REST API (Recommended)</span>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                    Account: takinyemi432@gmail.com
+                  </span>
+                </div>
+                <p className="text-slate-300 leading-relaxed">
+                  Your Composio account is active and verified on LinkedIn. To allow your standalone Node server or Vercel cloud cron to post autonomously without needing this assistant window, enter your Composio API key below.
+                </p>
+                <div>
+                  <label className="font-semibold text-slate-300 block mb-1">
+                    Composio API Key:
+                  </label>
+                  <input
+                    type="password"
+                    value={channelSettings.composio_api_key || ''}
+                    onChange={(e) => setChannelSettings({ ...channelSettings, composio_api_key: e.target.value })}
+                    placeholder={channelSettings.composio_api_key_set ? '•••••••••••••••• (API Key Active)' : 'Paste your API key from app.composio.dev/settings'}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs focus:outline-none focus:border-cyan-400"
+                  />
+                  <div className="mt-1 flex items-center justify-between text-[11px] text-slate-400">
+                    <span>Get your key from: <a href="https://app.composio.dev/settings" target="_blank" rel="noreferrer" className="text-cyan-400 underline">app.composio.dev/settings</a></span>
+                    {channelSettings.composio_api_key_set && (
+                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <Check className="w-3 h-3" /> Key saved in database
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Webhook Card */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Share2 className="w-4 h-4 text-amber-400" />
+                  <span className="font-bold text-white text-sm">Make.com / n8n Webhook (Alternative)</span>
+                </div>
+                <p className="text-slate-300 leading-relaxed">
+                  Alternatively, send post JSON payloads directly to a Make.com or n8n Custom Webhook for external automation.
+                </p>
+                <div>
+                  <label className="font-semibold text-slate-300 block mb-1">
+                    Webhook URL:
+                  </label>
+                  <input
+                    type="text"
+                    value={channelSettings.publish_webhook_url || ''}
+                    onChange={(e) => setChannelSettings({ ...channelSettings, publish_webhook_url: e.target.value })}
+                    placeholder="https://hook.eu1.make.com/... or https://n8n.yourdomain.com/webhook/..."
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setSettingsModalOpen(false)}
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl border border-slate-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveSettings}
+                disabled={savingSettings}
+                className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl shadow-lg flex items-center gap-2 transition disabled:opacity-50"
+              >
+                {savingSettings ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                <span>Save Channel Settings</span>
+              </button>
             </div>
           </div>
         </div>

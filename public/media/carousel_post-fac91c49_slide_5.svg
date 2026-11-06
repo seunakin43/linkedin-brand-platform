@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg_post-fac91c49_s5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07081A" />
+      <stop offset="50%" stop-color="#16194F" />
+      <stop offset="100%" stop-color="#040510" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg_post-fac91c49_s5)" />
+
+  <!-- Slide Body Content -->
+  
+          <!-- Slide Pill -->
+          <rect x="80" y="75" width="310" height="42" rx="21" fill="#1E1B4B" stroke="#4F46E5" stroke-width="1.5" />
+          <text x="235" y="102" fill="#C7D2FE" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="1.2" text-anchor="middle">04 · TAKEAWAY &amp; CTA</text>
+
+          <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="42" font-weight="800">
+            Operational Rigor &gt; Tool Hype
+          </text>
+          <text x="80" y="235" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="20">
+            Build your foundation on real operational boundaries, and intelligence will follow safely.
+          </text>
+
+          <!-- Discussion Question Card -->
+          <rect x="80" y="280" width="920" height="260" rx="24" fill="#11133D" stroke="#818CF8" stroke-width="2" />
+          <text x="120" y="335" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">QUESTION FOR ENGINEERS &amp; SREs</text>
+          
+          <text x="120" y="390" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="700">
+            <tspan x="120" dy="0">What domain expertise are you combining with modern AI </tspan>
+            <tspan x="120" dy="38">tools right now?</tspan>
+          </text>
+
+          <text x="120" y="490" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">
+            Drop your perspective in the comments below · Join the engineering discussion
+          </text>
+
+          <!-- Author Connection Card -->
+          <g transform="translate(80, 570)">
+            <rect x="0" y="0" width="920" height="230" rx="24" fill="#0F172A" stroke="#1E293B" stroke-width="1.5" />
+            
+            <circle cx="80" cy="80" r="45" fill="#1E1B4B" stroke="#818CF8" stroke-width="2" />
+            <text x="80" y="90" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="28" font-weight="800" text-anchor="middle">TA</text>
+
+            <text x="155" y="65" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="800">Toluwanimi Akinyemi</text>
+            <text x="155" y="95" fill="#38BDF8" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">Telecommunications NOC Engineer &amp; AI Automation Engineer</text>
+            <text x="155" y="125" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="14">Pan African Towers 789+ Nodes · UNIOSUN PGD Financial Math · ExpenseIQ Lead</text>
+
+            <line x1="40" y1="155" x2="880" y2="155" stroke="#1E293B" stroke-width="1" />
+
+            <text x="40" y="195" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="14">LinkedIn: /in/akinyemi-toluwanimi</text>
+            <text x="880" y="195" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" text-anchor="end">FOLLOW FOR DAILY SYSTEM ARCHITECTURE</text>
+          </g>
+
+          <g transform="translate(80, 830)">
+            <rect x="0" y="0" width="920" height="60" rx="16" fill="#064E3B" stroke="#059669" />
+            <text x="40" y="37" fill="#A7F3D0" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="700">✔ 5-SLIDE CAROUSEL COMPLETE</text>
+            <text x="880" y="37" fill="#6EE7B7" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="end">SLIDE 5 OF 5</text>
+          </g>
+        
+
+  <!-- Footer Branding -->
+  <line x1="80" y1="960" x2="1000" y2="960" stroke="#1E293B" stroke-width="1" />
+  <text x="80" y="1005" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">
+    Toluwanimi Akinyemi · Telecommunications NOC &amp; AI Automation Engineer
+  </text>
+  <text x="1000" y="1005" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700" text-anchor="end">
+    SLIDE 5 / 5 · 789 NODES · 99.8% SLA
+  </text>
+</svg>

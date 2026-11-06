@@ -119,7 +119,7 @@ app.put('/api/posts/:id', (req, res) => {
 app.post('/api/posts/:id/approval', (req, res) => {
   try {
     const { decision, feedback } = req.body;
-    if (!['approved', 'rejected', 'revision_requested'].includes(decision)) {
+    if (!['approved', 'rejected', 'revision_requested', 'pending_approval'].includes(decision)) {
       return res.status(400).json({ success: false, error: 'Invalid decision' });
     }
     const result = ContentGeneratorEngine.setPostApproval(req.params.id, decision, feedback);
@@ -230,6 +230,53 @@ app.delete('/api/brand-memory/:id', (req, res) => {
   try {
     db.prepare('DELETE FROM brand_memory WHERE id = ?').run(req.params.id);
     res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// --- 4b. OUTBOUND PUBLISHING SETTINGS (Composio / Webhooks / Tokens) ---
+app.get('/api/settings', (req, res) => {
+  try {
+    const rows = db.prepare("SELECT key, value FROM brand_memory WHERE category = 'config'").all();
+    const config = {};
+    rows.forEach(r => { config[r.key] = r.value; });
+
+    res.json({
+      success: true,
+      settings: {
+        publish_webhook_url: config.publish_webhook_url || process.env.PUBLISH_WEBHOOK_URL || '',
+        composio_api_key_set: Boolean(config.composio_api_key || process.env.COMPOSIO_API_KEY),
+        linkedin_token_set: Boolean(config.linkedin_access_token || process.env.LINKEDIN_ACCESS_TOKEN),
+        composio_account: 'linkedin_semble-tera (takinyemi432@gmail.com)',
+        author_urn: 'urn:li:person:-XwFu54idT'
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/settings', (req, res) => {
+  try {
+    const { publish_webhook_url, composio_api_key, linkedin_access_token } = req.body || {};
+
+    const upsertConfig = (k, v) => {
+      if (v === undefined) return;
+      const existing = db.prepare("SELECT id FROM brand_memory WHERE category = 'config' AND key = ?").get(k);
+      if (existing) {
+        db.prepare("UPDATE brand_memory SET value = ?, updated_at = datetime('now') WHERE id = ?").run(v, existing.id);
+      } else if (v) {
+        const id = `cfg-${crypto.randomUUID().slice(0, 8)}`;
+        db.prepare("INSERT INTO brand_memory (id, category, key, value, notes, is_active) VALUES (?, 'config', ?, ?, 'System Configuration', 1)").run(id, k, v);
+      }
+    };
+
+    upsertConfig('publish_webhook_url', publish_webhook_url);
+    upsertConfig('composio_api_key', composio_api_key);
+    upsertConfig('linkedin_access_token', linkedin_access_token);
+
+    res.json({ success: true, message: 'Settings saved successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
