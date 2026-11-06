@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg_post-71275ba6_s4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040914" />
+      <stop offset="50%" stop-color="#081730" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg_post-71275ba6_s4)" />
+
+  <!-- Slide Body Content -->
+  
+          <!-- Slide Pill -->
+          <rect x="80" y="75" width="290" height="42" rx="21" fill="#064E3B" stroke="#10B981" stroke-width="1.5" />
+          <text x="225" y="102" fill="#6EE7B7" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="1.2" text-anchor="middle">03 · PROVEN RESULTS</text>
+
+          <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="42" font-weight="800">
+            Real Metrics from Mission-Critical Operations
+          </text>
+          <text x="80" y="235" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="20">
+            Verified numbers from 24/7 telecommunications surveillance and applied AI systems.
+          </text>
+
+          <!-- Twin Stats Cards -->
+          <g transform="translate(80, 280)">
+            <!-- Card 1 -->
+            <rect x="0" y="0" width="440" height="300" rx="24" fill="#08152B" stroke="#0284C7" stroke-width="2" />
+            <text x="40" y="65" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">NETWORK SCALE &amp; RELIABILITY</text>
+            <text x="40" y="150" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="64" font-weight="900">789+</text>
+            <text x="40" y="195" fill="#38BDF8" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800">Cellular Nodes Monitored</text>
+            <text x="40" y="240" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Pan African Towers 24/7 nationwide network surveillance with 99.8% SLA compliance.</text>
+
+            <!-- Card 2 -->
+            <rect x="480" y="0" width="440" height="300" rx="24" fill="#08152B" stroke="#10B981" stroke-width="2" />
+            <text x="520" y="65" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">MTTR ACCELERATION</text>
+            <text x="520" y="150" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="64" font-weight="900">-30%</text>
+            <text x="520" y="195" fill="#A7F3D0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800">Mean Time to Repair</text>
+            <text x="520" y="240" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Achieved via standardized failure signatures and automated root-cause alarm triage.</text>
+          </g>
+
+          <!-- Third Card -->
+          <g transform="translate(80, 610)">
+            <rect x="0" y="0" width="920" height="190" rx="20" fill="#0F172A" stroke="#1E293B" />
+            <text x="40" y="50" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">THE TAKEAWAY FOR ENGINEERING TEAMS</text>
+            <text x="40" y="95" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="500">
+              Uptime is never an accident of luck or heroic late-night fixing.
+            </text>
+            <text x="40" y="130" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="500">
+              It is the inevitable output of deterministic systems designed to handle failure states before they trigger outages.
+            </text>
+          </g>
+
+          <g transform="translate(80, 830)">
+            <rect x="0" y="0" width="920" height="60" rx="16" fill="#0F172A" stroke="#334155" />
+            <text x="40" y="37" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="600">NEXT: KEY TAKEAWAYS &amp; DISCUSSION</text>
+            <text x="880" y="37" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="end">SLIDE 4 OF 5 ➔</text>
+          </g>
+        
+
+  <!-- Footer Branding -->
+  <line x1="80" y1="960" x2="1000" y2="960" stroke="#1E293B" stroke-width="1" />
+  <text x="80" y="1005" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600">
+    Toluwanimi Akinyemi · Telecommunications NOC &amp; AI Automation Engineer
+  </text>
+  <text x="1000" y="1005" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700" text-anchor="end">
+    SLIDE 4 / 5 · 789 NODES · 99.8% SLA
+  </text>
+</svg>

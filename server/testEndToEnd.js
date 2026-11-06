@@ -168,7 +168,7 @@ SchedulerService.toggleEmergencyPause(false);
 console.log('   Emergency Halt Deactivated: Normal operations restored.');
 
 // Now publish the approved post
-const publishResult = await LinkedInPublisherAgent.publishPost(samplePostId);
+const publishResult = await LinkedInPublisherAgent.publishPost(samplePostId, { allowExplicitUserPublish: true });
 console.log(`✔ [7/8] Publishing Succeeded under Human Approval:`, publishResult);
 
 // 8. Mobile Push Simulator & Inbound Engagement Response
