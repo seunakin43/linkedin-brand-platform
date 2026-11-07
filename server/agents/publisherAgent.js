@@ -1,5 +1,6 @@
 import { db } from '../db.js';
 import crypto from 'node:crypto';
+import { DynamicCarouselGenerator } from './carouselGenerator.js';
 
 export class LinkedInPublisherAgent {
   /**
@@ -64,8 +65,18 @@ export class LinkedInPublisherAgent {
         const composioKey = process.env.COMPOSIO_API_KEY || getConfig('composio_api_key');
         const linkedinToken = process.env.LINKEDIN_ACCESS_TOKEN || getConfig('linkedin_access_token');
 
-        // 1. Webhook Connector (Make.com, n8n, Zapier) - Most stable, zero token expiry
+        // Prepare high-resolution PNG image asset for LinkedIn feed publication
+        let imageAsset = null;
+        try {
+          const primarySlide = post.image_url || (post.carousel_slides ? JSON.parse(post.carousel_slides)[0] : null);
+          imageAsset = await DynamicCarouselGenerator.getOrGeneratePng(primarySlide, post.title, post.pillar_slug);
+        } catch (imgErr) {
+          console.warn('[PublisherAgent] Image asset generation warning:', imgErr.message);
+        }
+
+        // 1. Webhook Connector (Make.com, n8n, Zapier) - Passes full text, base64 PNG, and carousel links
         if (webhookUrl) {
+          const carouselSlides = post.carousel_slides ? JSON.parse(post.carousel_slides) : [post.image_url];
           const hookPayload = {
             post_id: post.id,
             title: post.title,
@@ -74,7 +85,13 @@ export class LinkedInPublisherAgent {
             hashtags: post.hashtags,
             first_comment: post.first_comment,
             full_text: fullText,
-            carousel_slides: post.carousel_slides ? JSON.parse(post.carousel_slides) : [post.image_url],
+            image_url: post.image_url,
+            image_png_url: post.image_url ? post.image_url.replace('.svg', '.png') : null,
+            image_base64: imageAsset ? imageAsset.buffer.toString('base64') : null,
+            image_mimetype: 'image/png',
+            image_filename: imageAsset ? imageAsset.filename : `${post.id}.png`,
+            carousel_slides: carouselSlides,
+            carousel_png_slides: carouselSlides.map(s => s.replace('.svg', '.png')),
             author_urn: profile?.linkedin_urn || 'urn:li:person:-XwFu54idT',
             timestamp: new Date().toISOString()
           };
@@ -99,9 +116,78 @@ export class LinkedInPublisherAgent {
           }
         }
 
-        // 2. Direct Composio REST API Integration (using connected account takinyemi432@gmail.com)
+        // 2. Direct Composio REST API Integration (with LinkedIn native image upload & attachment)
         if (!publishResult && composioKey) {
           try {
+            const authorUrn = profile?.linkedin_urn || 'urn:li:person:-XwFu54idT';
+            let uploadedAssetUrn = null;
+
+            // Step A: If PNG image is available, register image upload on LinkedIn
+            if (imageAsset && imageAsset.buffer) {
+              try {
+                const regRes = await fetch('https://backend.composio.dev/api/v1/actions/LINKEDIN_REGISTER_IMAGE_UPLOAD/execute', {
+                  method: 'POST',
+                  headers: {
+                    'x-api-key': composioKey,
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    connectedAccountId: 'linkedin_semble-tera',
+                    arguments: {
+                      owner_urn: authorUrn,
+                      recipe: 'urn:li:digitalmediaRecipe:feedshare-image'
+                    }
+                  })
+                });
+
+                if (regRes.ok) {
+                  const regData = await regRes.json();
+                  const uploadUrl = regData.data?.upload_url || regData.data?.upload_mechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
+                  const assetUrn = regData.data?.asset_urn || regData.data?.asset;
+
+                  if (uploadUrl && assetUrn) {
+                    // Step B: Upload image binary bytes to LinkedIn presigned upload URL
+                    const putRes = await fetch(uploadUrl, {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'image/png',
+                        'media-type-family': 'STILLIMAGE'
+                      },
+                      body: imageAsset.buffer
+                    });
+
+                    if (putRes.ok || putRes.status === 201) {
+                      uploadedAssetUrn = assetUrn;
+                      console.log(`[PublisherAgent] Successfully uploaded ${imageAsset.filename} to LinkedIn asset: ${uploadedAssetUrn}`);
+                    } else {
+                      console.warn('[PublisherAgent] Binary PUT to LinkedIn returned status:', putRes.status);
+                    }
+                  }
+                } else {
+                  console.warn('[PublisherAgent] LINKEDIN_REGISTER_IMAGE_UPLOAD returned non-200:', regRes.status);
+                }
+              } catch (imgUpErr) {
+                console.warn('[PublisherAgent] Image upload step failed, continuing with post:', imgUpErr.message);
+              }
+            }
+
+            // Step C: Build post arguments with attached picture if uploadedAssetUrn is ready
+            const postArgs = {
+              author: authorUrn,
+              commentary: fullText,
+              visibility: 'PUBLIC'
+            };
+
+            if (uploadedAssetUrn) {
+              postArgs.images = [
+                {
+                  name: imageAsset ? imageAsset.filename : `${post.id}.png`,
+                  mimetype: 'image/png',
+                  s3key: uploadedAssetUrn
+                }
+              ];
+            }
+
             const compRes = await fetch('https://backend.composio.dev/api/v1/actions/LINKEDIN_CREATE_LINKED_IN_POST/execute', {
               method: 'POST',
               headers: {
@@ -110,11 +196,7 @@ export class LinkedInPublisherAgent {
               },
               body: JSON.stringify({
                 connectedAccountId: 'linkedin_semble-tera',
-                arguments: {
-                  author: profile?.linkedin_urn || 'urn:li:person:-XwFu54idT',
-                  commentary: fullText,
-                  visibility: 'PUBLIC'
-                }
+                arguments: postArgs
               })
             });
 
@@ -125,9 +207,10 @@ export class LinkedInPublisherAgent {
                 success: true,
                 share_urn: shareUrn,
                 permalink: `https://www.linkedin.com/feed/update/${shareUrn}/`,
-                mode: 'COMPOSIO_REST_API',
+                mode: uploadedAssetUrn ? 'COMPOSIO_REST_API_WITH_IMAGE' : 'COMPOSIO_REST_API',
                 web_intent_url: 'https://www.linkedin.com/feed/?shareActive=true',
-                full_text: fullText
+                full_text: fullText,
+                image_attached: Boolean(uploadedAssetUrn)
               };
             } else {
               const errBody = await compRes.text();
@@ -138,9 +221,58 @@ export class LinkedInPublisherAgent {
           }
         }
 
-        // 3. Direct LinkedIn Official OAuth Access Token
+        // 3. Direct LinkedIn Official OAuth Access Token (with native Image URN upload)
         if (!publishResult && linkedinToken) {
           const profileUrn = profile?.linkedin_urn || 'urn:li:person:-XwFu54idT';
+          let directAssetUrn = null;
+
+          if (imageAsset && imageAsset.buffer) {
+            try {
+              const regRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${linkedinToken}`,
+                  'Content-Type': 'application/json',
+                  'X-Restli-Protocol-Version': '2.0.0'
+                },
+                body: JSON.stringify({
+                  registerUploadRequest: {
+                    recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+                    owner: profileUrn,
+                    serviceRelationships: [
+                      {
+                        relationshipType: 'OWNER',
+                        identifier: 'urn:li:userGeneratedContent'
+                      }
+                    ]
+                  }
+                })
+              });
+
+              if (regRes.ok) {
+                const regData = await regRes.json();
+                const uploadUrl = regData.value?.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
+                const asset = regData.value?.asset;
+
+                if (uploadUrl && asset) {
+                  const putRes = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    headers: {
+                      'Authorization': `Bearer ${linkedinToken}`,
+                      'Content-Type': 'image/png'
+                    },
+                    body: imageAsset.buffer
+                  });
+                  if (putRes.ok || putRes.status === 201) {
+                    directAssetUrn = asset;
+                  }
+                }
+              }
+            } catch (dErr) {
+              console.warn('Direct LinkedIn image upload error:', dErr.message);
+            }
+          }
+
           const liRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
             method: 'POST',
             headers: {
@@ -154,7 +286,15 @@ export class LinkedInPublisherAgent {
               specificContent: {
                 'com.linkedin.ugc.ShareContent': {
                   shareCommentary: { text: fullText },
-                  shareMediaCategory: 'NONE'
+                  shareMediaCategory: directAssetUrn ? 'IMAGE' : 'NONE',
+                  media: directAssetUrn ? [
+                    {
+                      status: 'READY',
+                      description: { text: post.title },
+                      media: directAssetUrn,
+                      title: { text: post.title }
+                    }
+                  ] : []
                 }
               },
               visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' }
@@ -168,7 +308,7 @@ export class LinkedInPublisherAgent {
               success: true,
               share_urn: shareUrn,
               permalink: `https://www.linkedin.com/feed/update/${shareUrn}/`,
-              mode: 'LIVE_LINKEDIN_REST_API',
+              mode: directAssetUrn ? 'LIVE_LINKEDIN_REST_API_WITH_IMAGE' : 'LIVE_LINKEDIN_REST_API',
               web_intent_url: 'https://www.linkedin.com/feed/?shareActive=true',
               full_text: fullText
             };

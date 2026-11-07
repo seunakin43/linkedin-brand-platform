@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -345,6 +346,19 @@ export class DynamicVisualGenerator {
 
     fs.writeFileSync(filePath, svgContent, 'utf-8');
     fs.writeFileSync(distFilePath, svgContent, 'utf-8');
+
+    // Also generate PNG using sharp for LinkedIn feed upload
+    const pngFilename = filename.replace('.svg', '.png');
+    const pngPath = path.join(MEDIA_DIR, pngFilename);
+    const distPngPath = path.join(DIST_MEDIA_DIR, pngFilename);
+    try {
+      sharp(Buffer.from(svgContent)).png().toFile(pngPath).then(() => {
+        try { fs.copyFileSync(pngPath, distPngPath); } catch (_) {}
+      }).catch(err => {
+        console.warn('PNG generation error in DynamicVisualGenerator:', err.message);
+      });
+    } catch (_) {}
+
     return `/media/${filename}`;
   }
 }

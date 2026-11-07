@@ -17,18 +17,18 @@
           <rect x="80" y="75" width="310" height="42" rx="21" fill="#451A03" stroke="#D97706" stroke-width="1.5" />
           <text x="235" y="102" fill="#FDE68A" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="1.2" text-anchor="middle">04 · TAKEAWAY &amp; CTA</text>
 
-          <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="42" font-weight="800">
+          <text x="80" y="175" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="38" font-weight="800">
             Operational Rigor &gt; Tool Hype
           </text>
-          <text x="80" y="235" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="20">
+          <text x="80" y="225" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="18">
             Build your foundation on real operational boundaries, and intelligence will follow safely.
           </text>
 
           <!-- Discussion Question Card -->
-          <rect x="80" y="280" width="920" height="260" rx="24" fill="#211304" stroke="#F59E0B" stroke-width="2" />
-          <text x="120" y="335" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">QUESTION FOR ENGINEERS &amp; SREs</text>
+          <rect x="80" y="270" width="920" height="270" rx="24" fill="#211304" stroke="#F59E0B" stroke-width="2" />
+          <text x="120" y="325" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700">QUESTION FOR ENGINEERS &amp; BUILDERS</text>
           
-          <text x="120" y="390" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="700">
+          <text x="120" y="380" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="700">
             <tspan x="120" dy="0">Do you see AI adoption moving faster in pure digital so</tspan>
             <tspan x="120" dy="38">ftware, or in physical infrastructure operations?</tspan>
           </text>

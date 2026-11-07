@@ -17,33 +17,33 @@
           <rect x="80" y="75" width="280" height="42" rx="21" fill="#450A0A" stroke="#DC2626" stroke-width="1.5" />
           <text x="220" y="102" fill="#FCA5A5" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="1.2" text-anchor="middle">01 · THE PROBLEM</text>
 
-          <text x="80" y="180" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="42" font-weight="800">
-            Why Traditional Approaches Fail Under Load
+          <text x="80" y="175" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="38" font-weight="800">
+            Why Systems Break Without Structured Safeguards
           </text>
-          <text x="80" y="235" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="20">
-            Real operations break when systems rely on manual intervention or unconstrained outputs.
+          <text x="80" y="225" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="18">
+            Operational bottlenecks arise when engineering teams rely on manual intervention or unconstrained outputs.
           </text>
 
           <!-- Failure Vectors Box -->
-          <rect x="80" y="280" width="920" height="520" rx="24" fill="#180B0B" stroke="#7F1D1D" stroke-width="2" />
+          <rect x="80" y="270" width="920" height="530" rx="24" fill="#180B0B" stroke="#7F1D1D" stroke-width="2" />
           
-          <g transform="translate(130, 340)">
-            <rect x="0" y="0" width="820" height="110" rx="16" fill="#2A1212" stroke="#991B1B" />
-            <text x="35" y="45" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="800">Vector A: Alert Fatigue &amp; Cascade Storms</text>
-            <text x="35" y="80" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">Hundreds of uncoordinated alarms flood on-call engineers, obscuring the single true root cause.</text>
+          <g transform="translate(130, 315)">
+            <rect x="0" y="0" width="820" height="125" rx="16" fill="#2A1212" stroke="#991B1B" />
+            <text x="35" y="45" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">Vector A: Manual 18-Min Audit Bottlenecks</text>
+            <text x="35" y="80" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Finance teams review line items manually, causing invoice backlog and human error.</text>
 
-            <rect x="0" y="140" width="820" height="110" rx="16" fill="#2A1212" stroke="#991B1B" />
-            <text x="35" y="185" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="800">Vector B: Non-Deterministic LLM Payloads</text>
-            <text x="35" y="220" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">Free-form AI outputs create silent schema corruptions when dumped directly into production databases.</text>
+            <rect x="0" y="150" width="820" height="125" rx="16" fill="#2A1212" stroke="#991B1B" />
+            <text x="35" y="195" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">Vector B: Multi-Tenant Schema Collisions</text>
+            <text x="35" y="230" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">Different vendor formats break unvalidated parsers and create database reconciliation errors.</text>
 
-            <rect x="0" y="280" width="820" height="110" rx="16" fill="#2A1212" stroke="#991B1B" />
-            <text x="35" y="325" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="800">Vector C: Reactive Late-Night Firefighting</text>
-            <text x="35" y="360" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="16">Engineers dispatched after the DC battery has already dropped below 42V, breaching strict SLA windows.</text>
+            <rect x="0" y="300" width="820" height="125" rx="16" fill="#2A1212" stroke="#991B1B" />
+            <text x="35" y="345" fill="#EF4444" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="800">Vector C: Hallucinated Tax &amp; Currency Math</text>
+            <text x="35" y="380" fill="#CBD5E1" font-family="'Plus Jakarta Sans', sans-serif" font-size="15">LLMs guessing total amounts without strict schema validation create compliance liabilities.</text>
           </g>
 
           <g transform="translate(80, 830)">
             <rect x="0" y="0" width="920" height="60" rx="16" fill="#0F172A" stroke="#334155" />
-            <text x="40" y="37" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="600">NEXT: THE DETERMINISTIC ARCHITECTURE</text>
+            <text x="40" y="37" fill="#94A3B8" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="600">NEXT: THE 3-STEP ARCHITECTURE</text>
             <text x="880" y="37" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="end">SLIDE 2 OF 5 ➔</text>
           </g>
         

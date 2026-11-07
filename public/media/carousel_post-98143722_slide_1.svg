@@ -18,27 +18,27 @@
           <text x="310" y="102" fill="#38BDF8" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="13" font-weight="800" letter-spacing="1.2" text-anchor="middle">TELECOMMUNICATIONS &amp; NOC OPERATIONS</text>
 
           <!-- Main Title -->
-          <text x="80" y="200" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="46" font-weight="800">
-            <tspan x="80" dy="0">How IoT RMS Telemetry</tspan><tspan x="80" dy="58">Prevents 48V Battery</tspan><tspan x="80" dy="58">Depletion Before Site</tspan>
+          <text x="80" y="200" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="44" font-weight="800">
+            <tspan x="80" dy="0">How IoT RMS Telemetry</tspan><tspan x="80" dy="56">Prevents 48V Battery</tspan><tspan x="80" dy="56">Depletion</tspan>
           </text>
 
           <!-- Hook Card -->
           <rect x="80" y="440" width="920" height="320" rx="24" fill="#08152B" stroke="#0284C7" stroke-width="2" />
           <text x="120" y="500" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" letter-spacing="1">THE ENGINEERING REALITY</text>
           
-          <text x="120" y="555" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="600" width="840">
+          <text x="120" y="555" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="600">
             <tspan x="120" dy="0">[Operational Case #79C2] When commercial power collapses on </tspan>
             <tspan x="120" dy="36">a remote cell site, the 48V DC battery bank is the last line of d</tspan>
             <tspan x="120" dy="36">efense.
-Here is how we automate RMS voltage threshold monitoring ...</tspan>
+Here is how we automate RMS voltage threshold monitoring acros...</tspan>
           </text>
 
           <g transform="translate(120, 670)">
-            <rect x="0" y="0" width="260" height="48" rx="24" fill="#0C4A6E" stroke="#38BDF8" />
-            <text x="130" y="30" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">789+ NOC NODES</text>
+            <rect x="0" y="0" width="280" height="48" rx="24" fill="#0C4A6E" stroke="#38BDF8" />
+            <text x="140" y="30" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" text-anchor="middle">789+ NOC NODES</text>
 
-            <rect x="280" y="0" width="260" height="48" rx="24" fill="#0C4A6E" stroke="#38BDF8" />
-            <text x="410" y="30" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">99.8% SLA DISCIPLINE</text>
+            <rect x="300" y="0" width="280" height="48" rx="24" fill="#0C4A6E" stroke="#38BDF8" />
+            <text x="440" y="30" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" text-anchor="middle">99.8% SLA DISCIPLINE</text>
           </g>
 
           <!-- Swipe Indicator -->

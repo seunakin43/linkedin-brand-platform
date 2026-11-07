@@ -32,9 +32,10 @@ function PostCarouselViewer({
   ];
 
   const handleDownloadSlide = (url: string, index: number) => {
+    const pngUrl = url.replace(/\.svg(\?.*)?$/, '.png$1');
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `carousel_slide_${index + 1}.svg`;
+    a.href = pngUrl;
+    a.download = `carousel_slide_${index + 1}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -66,10 +67,10 @@ function PostCarouselViewer({
             type="button"
             onClick={handleDownloadAll}
             className="text-[11px] text-emerald-300 hover:text-emerald-200 font-mono flex items-center gap-1 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-800/60 transition"
-            title="Download all 5 slides for LinkedIn carousel upload"
+            title="Download all 5 slides as high-res PNG for LinkedIn upload"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Download 5 Slides</span>
+            <span>Download 5 PNG Slides</span>
           </button>
           <a
             href={currentUrl}
@@ -1997,9 +1998,10 @@ export default function App() {
                   const slides = publishModalData.post?.carousel_slides || [];
                   slides.forEach((url: string, i: number) => {
                     setTimeout(() => {
+                      const pngUrl = url.replace(/\.svg(\?.*)?$/, '.png$1');
                       const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `carousel_slide_${i + 1}.svg`;
+                      a.href = pngUrl;
+                      a.download = `carousel_slide_${i + 1}.png`;
                       document.body.appendChild(a);
                       a.click();
                       document.body.removeChild(a);
@@ -2009,7 +2011,7 @@ export default function App() {
                 className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow"
               >
                 <Download className="w-4 h-4" />
-                <span>Download 5 Slides</span>
+                <span>Download 5 PNG Slides</span>
               </button>
 
               <div className="flex items-center gap-2">

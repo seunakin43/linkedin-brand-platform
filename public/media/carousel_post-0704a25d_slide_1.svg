@@ -18,15 +18,15 @@
           <text x="310" y="102" fill="#C7D2FE" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="13" font-weight="800" letter-spacing="1.2" text-anchor="middle">T-SHAPED AI GENERALIST STRATEGY</text>
 
           <!-- Main Title -->
-          <text x="80" y="200" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="46" font-weight="800">
-            <tspan x="80" dy="0">The &quot;AI Generalist&quot;</tspan><tspan x="80" dy="58">Mindset: Why Depth in One</tspan><tspan x="80" dy="58">Domain Supercharges</tspan>
+          <text x="80" y="200" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="44" font-weight="800">
+            <tspan x="80" dy="0">The &quot;AI Generalist&quot;</tspan><tspan x="80" dy="56">Mindset: Why Depth in One</tspan><tspan x="80" dy="56">Domain</tspan>
           </text>
 
           <!-- Hook Card -->
           <rect x="80" y="440" width="920" height="320" rx="24" fill="#11133D" stroke="#4F46E5" stroke-width="2" />
           <text x="120" y="500" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" letter-spacing="1">THE ENGINEERING REALITY</text>
           
-          <text x="120" y="555" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="600" width="840">
+          <text x="120" y="555" fill="#E2E8F0" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="600">
             <tspan x="120" dy="0">There is a common debate in tech:
 Should you be a hyper-spec</tspan>
             <tspan x="120" dy="36">ialized expert or a generalist?
@@ -35,11 +35,11 @@ My experience in telecommunicatio</tspan>
           </text>
 
           <g transform="translate(120, 670)">
-            <rect x="0" y="0" width="260" height="48" rx="24" fill="#1E1B4B" stroke="#818CF8" />
-            <text x="130" y="30" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">789+ NOC NODES</text>
+            <rect x="0" y="0" width="280" height="48" rx="24" fill="#1E1B4B" stroke="#818CF8" />
+            <text x="140" y="30" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" text-anchor="middle">DOMAIN DEPTH FIRST</text>
 
-            <rect x="280" y="0" width="260" height="48" rx="24" fill="#1E1B4B" stroke="#818CF8" />
-            <text x="410" y="30" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">99.8% SLA DISCIPLINE</text>
+            <rect x="300" y="0" width="280" height="48" rx="24" fill="#1E1B4B" stroke="#818CF8" />
+            <text x="440" y="30" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" text-anchor="middle">PRACTICAL AUTOMATION</text>
           </g>
 
           <!-- Swipe Indicator -->

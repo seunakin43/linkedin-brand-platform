@@ -1054,8 +1054,9 @@ Respond with ONLY valid JSON with this schema:
 
     // Regenerate 5-slide carousel to reflect revamped copy and hook
     let revampedSlides = [];
+    const cacheBuster = Date.now();
     try {
-      revampedSlides = DynamicCarouselGenerator.generateCarousel({
+      const generated = DynamicCarouselGenerator.generateCarousel({
         postId: id,
         title: revisedTitle,
         hook: revisedHook,
@@ -1066,7 +1067,8 @@ Respond with ONLY valid JSON with this schema:
         hashtags: post.hashtags || '',
         audienceQuestion: revisedQuestion
       });
-      if (revampedSlides && revampedSlides.length > 0) {
+      if (generated && generated.length > 0) {
+        revampedSlides = generated.map(s => `${s}?v=${cacheBuster}`);
         revisedImageUrl = revampedSlides[0];
       }
     } catch (e) {
